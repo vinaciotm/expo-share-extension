@@ -99,6 +99,69 @@ module.exports = withShareExtension(getDefaultConfig(__dirname), {
 });
 ```
 
+## Basic Usage
+
+Need a way to close the share extension? Use the `close` method from `expo-share-extension`:
+
+```ts
+import { close } from "expo-share-extension"
+import { Button, Text, View } from "react-native";
+
+// if ShareExtension is your root component, url is available as an initial prop
+export default function ShareExtension({ url }: { url: string }) {
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>{url}</Text>
+      <Button title="Close" onPress={close} />
+    </View>
+  );
+}
+```
+
+If you want to open the host app from the share extension, use the `openHostApp` method from `expo-share-extension` with a valid path:
+
+```ts
+import { openHostApp } from "expo-share-extension"
+import { Button, Text, View } from "react-native";
+
+// if ShareExtension is your root component, url is available as an initial prop
+export default function ShareExtension({ url }: { url: string }) {
+  const handleOpenHostApp = () => {
+    openHostApp(`create?url=${url}`)
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>{url}</Text>
+      <Button title="Open Host App" onPress={handleOpenHostApp} />
+    </View>
+  );
+}
+```
+ShareExtension.tsx
+
+When you share images and videos, `expo-share-extension` stores them in a `sharedData` directory in your app group's container.
+These files are not automatically cleaned up, so you should delete them when you're done with them. You can use the `clearAppGroupContainer` method from `expo-share-extension` to delete them:
+
+```ts
+import { clearAppGroupContainer } from "expo-share-extension"
+import { Button, Text, View } from "react-native";
+
+// if ShareExtension is your root component, url is available as an initial prop
+export default function ShareExtension({ url }: { url: string }) {
+  const handleCleanUp = async () => {
+    await clearAppGroupContainer()
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>I have finished processing all shared images and videos</Text>
+      <Button title="Clear App Group Container" onPress={handleCleanUp} />
+    </View>
+  );
+}
+```
+
 ## Accessing Shared Data
 
 The shared data is passed to the share extension's root component as an initial prop based on this type:
@@ -184,67 +247,7 @@ If you do not specify the `activationRules` option, `expo-share-extension` enabl
 
 Contributions to support the remaining [NSExtensionActivationRules](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/AppExtensionKeys.html#//apple_ref/doc/uid/TP40014212-SW10) (`NSExtensionActivationSupportsAttachmentsWithMaxCount` and `NSExtensionActivationSupportsAttachmentsWithMinCount`) are welcome!
 
-## Basic Usage
 
-Need a way to close the share extension? Use the `close` method from `expo-share-extension`:
-
-```ts
-import { close } from "expo-share-extension"
-import { Button, Text, View } from "react-native";
-
-// if ShareExtension is your root component, url is available as an initial prop
-export default function ShareExtension({ url }: { url: string }) {
-  return (
-    <View style={{ flex: 1 }}>
-      <Text>{url}</Text>
-      <Button title="Close" onPress={close} />
-    </View>
-  );
-}
-```
-
-If you want to open the host app from the share extension, use the `openHostApp` method from `expo-share-extension` with a valid path:
-
-```ts
-import { openHostApp } from "expo-share-extension"
-import { Button, Text, View } from "react-native";
-
-// if ShareExtension is your root component, url is available as an initial prop
-export default function ShareExtension({ url }: { url: string }) {
-  const handleOpenHostApp = () => {
-    openHostApp(`create?url=${url}`)
-  }
-
-  return (
-    <View style={{ flex: 1 }}>
-      <Text>{url}</Text>
-      <Button title="Open Host App" onPress={handleOpenHostApp} />
-    </View>
-  );
-}
-```
-
-When you share images and videos, `expo-share-extension` stores them in a `sharedData` directory in your app group's container.
-These files are not automatically cleaned up, so you should delete them when you're done with them. You can use the `clearAppGroupContainer` method from `expo-share-extension` to delete them:
-
-```ts
-import { clearAppGroupContainer } from "expo-share-extension"
-import { Button, Text, View } from "react-native";
-
-// if ShareExtension is your root component, url is available as an initial prop
-export default function ShareExtension({ url }: { url: string }) {
-  const handleCleanUp = async () => {
-    await clearAppGroupContainer()
-  }
-
-  return (
-    <View style={{ flex: 1 }}>
-      <Text>I have finished processing all shared images and videos</Text>
-      <Button title="Clear App Group Container" onPress={handleOpenHostApp} />
-    </View>
-  );
-}
-```
 
 ## Configuration Options
 
