@@ -99,7 +99,7 @@ module.exports = withShareExtension(getDefaultConfig(__dirname), {
 });
 ```
 
-## Basic Usage
+## Create `ShareExtension.tsx` to handle share from another app 
 
 Need a way to close the share extension? Use the `close` method from `expo-share-extension`:
 
@@ -138,8 +138,6 @@ export default function ShareExtension({ url }: { url: string }) {
   );
 }
 ```
-ShareExtension.tsx
-
 When you share images and videos, `expo-share-extension` stores them in a `sharedData` directory in your app group's container.
 These files are not automatically cleaned up, so you should delete them when you're done with them. You can use the `clearAppGroupContainer` method from `expo-share-extension` to delete them:
 
